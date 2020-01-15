@@ -1,0 +1,11 @@
+|ID |Item                |Quantity|Unit Price|Price|
+|  1|        French_toast|       3|      3.50|10.50|
+|  2|        Egg_Benedict|       1|      6.30| 6.30|
+|  3|               Latte|       1|      6.00| 6.00|
+|  4|           Sky_juice|       2|      0.25| 0.50|
+
+Total : 23.30
+Payment : 30.00
+Change : 6.70
+
+

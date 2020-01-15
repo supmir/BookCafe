@@ -6,6 +6,9 @@
 #include <iterator>
 #include <iomanip>
 #include <ctime>
+#include <windows.h>
+#pragma comment(lib, "Winmm.lib")
+
 
 using namespace std;
 
@@ -164,7 +167,6 @@ class OrderList{
 			{
 				
 				cout << "Please select your order first\n" << endl;
-				cin;
 				return false;
 			} 
 			cout<< table(false,menu);
@@ -216,7 +218,14 @@ class OrderList{
 
 
 
-void menuCreator(MenuList& list){
+void pause(){
+	cout<< "Press enter to continue\n";
+	fflush(stdin);
+	// cin.ignore();
+	cin.get();
+}
+
+void menuCreator(MenuList& menu){
 	string line;
 	string name;
 	double price;
@@ -230,7 +239,7 @@ void menuCreator(MenuList& list){
 			stringstream ss(line);
 			int i = 0;
 			ss >> name >> price;
-			list.newItem(name, price);
+			menu.newItem(name, price);
 		}
 		
 	}else{
@@ -238,11 +247,11 @@ void menuCreator(MenuList& list){
 		cout << "file does not exist\n";
 		exit(1);
 	}	
-	list.scode = scode;
+	menu.scode = scode;
 }
-
 void showOrder (OrderList& order,MenuList& menu){
 	order.listAll(menu);
+	pause();
 
 }
 
@@ -257,8 +266,8 @@ void showMenu(MenuList& menu, OrderList& order,string s){
 	cout << "Select your order (input 0 to return to menu) \n>> ";
 	cin >> temp;
 	
-	system("CLS");
 	if(temp==0){
+		system("CLS");
 		return;
 	}
 	if(!menu.exist(temp-1)){
@@ -306,7 +315,6 @@ void changeQuantity(OrderList& order, MenuList& menu){
 		goto ALTER;
 	}
 
-		system("CLS");
 
 	cout << "Enter new amount (0 to cancel)"<<endl<< ">> ";
 	cin >> amt;
@@ -332,10 +340,9 @@ void removeItem(OrderList& order, MenuList& menu){
 		cout << "Invalid option\n";
 		goto REMOVE;
 	}
-	
-		system("CLS");
-
 	order.remove(temp-1);
+	cout << "Item removed.\n";
+	pause();
 }
 
 void removeAllItems(OrderList& order, MenuList& menu, bool silent){
@@ -361,9 +368,6 @@ void pay(OrderList& order, MenuList& menu){
 	double total = order.total, payment=0.00, change=0.00;
 	PAY:cout << "Please enter payment amount"<<endl<<"\n>> ";
 	cin >> payment;
-
-		system("CLS");
-
 	change = payment-total;
 	if(change<0){
 		cout << "Insufficient amount. \n>> ";
@@ -411,6 +415,7 @@ void dailyReport(OrderList& order, MenuList& menu){
 }
 
 void intro(MenuList& menu, OrderList& order){
+		system("CLS");
 		int option;
 		cout << "\t [1] Show the current order\n ";
 		cout << "\t [2] Show the restaurant's menu\n ";
@@ -424,7 +429,6 @@ void intro(MenuList& menu, OrderList& order){
 		cin >> option;
 			system("CLS");
 
-		cout << option;
 		cout << endl;
 	
 		switch (option) {
@@ -460,9 +464,12 @@ void intro(MenuList& menu, OrderList& order){
 }
 
 int main(){
+	system("CLS");
+	PlaySound(TEXT("intro.ogg"), NULL, SND_FILENAME | SND_ASYNC);
 	MenuList menu;
 	OrderList order;
 	menuCreator(menu);
 	cout << "\t************************\t\n\t* Welcome to Book Cafe *\t\n\t************************\t" << endl;
+	pause();
 	intro(menu, order);	
 }
