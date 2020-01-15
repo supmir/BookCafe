@@ -28,6 +28,8 @@ class OrderItem{
 class MenuList{
 	public:
 		vector<MenuItem> itemList;
+		string scode;
+
 		
 		void newItem(string name, double price){
 			// cout << name << price;
@@ -110,7 +112,7 @@ class MenuList{
 		}
 		bool exist(int x){
 			
-			return x>0 && x<itemList.size();
+			return x>=0 && x<itemList.size();
 		}
 };
 
@@ -208,7 +210,7 @@ class OrderList{
 			itemList.erase(itemList.begin()+x);
 		}
 		bool exist(int x){
-			return (x>0 && x<itemList.size());
+			return (x>=0 && x<itemList.size());
 		}
 };
 
@@ -218,6 +220,9 @@ void menuCreator(MenuList& list){
 	string line;
 	string name;
 	double price;
+	stringstream ss;
+	ss << time(0); //get current time;
+	string scode = ss.str();
 	ifstream infile("Menu.txt");
 	
 	if (infile.is_open()) {
@@ -233,7 +238,7 @@ void menuCreator(MenuList& list){
 		cout << "file does not exist\n";
 		exit(1);
 	}	
-
+	list.scode = scode;
 }
 
 void showOrder (OrderList& order,MenuList& menu){
@@ -244,11 +249,12 @@ void showOrder (OrderList& order,MenuList& menu){
 void showMenu(MenuList& menu, OrderList& order,string s){
 	
 	int temp;
+	ORDERSELECTION:
 	menu.listAll();
 	if(s!=""){
 		cout << s << " has been added to your order" << endl;
 	}
-	ORDERSELECTION:cout << "Select your order (input 0 to return to menu) \n>> ";
+	cout << "Select your order (input 0 to return to menu) \n>> ";
 	cin >> temp;
 	
 	system("CLS");
@@ -260,7 +266,6 @@ void showMenu(MenuList& menu, OrderList& order,string s){
 		goto ORDERSELECTION;
 	}
 	int q;
-	system("CLS");
 	
 	QUANTITY:cout << "Input quantity >> ";
 	cin >> q;
@@ -333,17 +338,19 @@ void removeItem(OrderList& order, MenuList& menu){
 	order.remove(temp-1);
 }
 
-void removeAllItems(OrderList& order, MenuList& menu){
+void removeAllItems(OrderList& order, MenuList& menu, bool silent){
 	if(order.isEmpty()){
 		cout << "Please select your order first\n";
 	}
 	else{
 		string x;
-		cout << "Are you sure you want to remove all items (enter yes to confirm)?\n>> ";
-		cin >> x;		
-		if(x=="yes"){
-		OrderList fresh;
-		order = fresh;
+		if(!silent){
+			cout << "Are you sure you want to remove all items (enter yes to confirm)?\n>> ";
+			cin >> x;
+		}
+		if(x=="yes"||silent){
+			OrderList fresh;
+			order = fresh;
 		}
 
 	}
@@ -365,18 +372,25 @@ void pay(OrderList& order, MenuList& menu){
 	cout << "Your change is "<< fixed<< setprecision(2)<<change<<endl;
 	
 	stringstream ss;
-	ss << time(0);
-	string filename = "RECEIPT"+ ss.str() +".txt";
-	ofstream receipt (filename);
-	if (receipt.is_open())
+	ss << time(0); //get current time
+	string filename = "RECEIPT"+ ss.str() +".txt",scode = "MasterReceipt"+ menu.scode +".txt"; //concatenate time with ".txt"
+	ofstream receipt (filename),master(scode,ofstream::app);//create and open both files
+	if (receipt.is_open()) //write to individual receipt
 	{
 		receipt << table;
-		receipt << "Payment : " << fixed <<setprecision(2)<< payment << "\nChange : " << change;
+		receipt << "Payment : " << fixed << setprecision(2) << payment << "\nChange : " << change <<"\n\n\n";
 		receipt.close();
 	}
 	else cout << "Unable to open file\n";
-	
-	removeAllItems(order,menu);
+	if (master.is_open()) //write to master receipt
+	{
+		master << "RECEIPT " << ss.str() << endl;
+		master << table;
+		master << "Payment : " << fixed <<setprecision(2)<< payment << "\nChange : " << change <<"\n\n\n";
+		master.close();
+	}
+	else cout << "Unable to open file\n";
+	removeAllItems(order,menu,true);
 }
 
 
@@ -430,7 +444,7 @@ void intro(MenuList& menu, OrderList& order){
 			pay(order, menu);
 			break;
 		case 6:
-			removeAllItems(order,menu);
+			removeAllItems(order,menu,false);
 			break;
 		case 7:
 			cout << "\n\t Thank You And Come Again \n";
@@ -450,11 +464,5 @@ int main(){
 	OrderList order;
 	menuCreator(menu);
 	cout << "\t************************\t\n\t* Welcome to Book Cafe *\t\n\t************************\t" << endl;
-	intro(menu, order);
-	
-	
-	
-	
-	
-	
+	intro(menu, order);	
 }
