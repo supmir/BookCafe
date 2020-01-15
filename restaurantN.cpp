@@ -110,7 +110,7 @@ class MenuList{
 		}
 		bool exist(int x){
 			
-			return x>0 && x<itemList.size;
+			return x>0 && x<itemList.size();
 		}
 };
 
@@ -208,7 +208,7 @@ class OrderList{
 			itemList.erase(itemList.begin()+x);
 		}
 		bool exist(int x){
-			return x>0 && x<itemList.size;
+			return (x>0 && x<itemList.size());
 		}
 };
 
