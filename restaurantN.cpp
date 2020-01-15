@@ -6,8 +6,6 @@
 #include <iterator>
 #include <iomanip>
 #include <ctime>
-#include <windows.h>
-#pragma comment(lib, "Winmm.lib")
 
 
 using namespace std;
@@ -450,12 +448,11 @@ void intro(MenuList& menu, OrderList& order){
 		case 6:
 			removeAllItems(order,menu,false);
 			break;
+		case 8:
+			dailyReport(order, menu);
 		case 7:
 			cout << "\n\t Thank You And Come Again \n";
 			return;
-		case 8:
-			dailyReport(order, menu);
-			break;
 		default:
 			cout << "Invalid option\n";
 		}
@@ -465,11 +462,19 @@ void intro(MenuList& menu, OrderList& order){
 
 int main(){
 	system("CLS");
-	PlaySound(TEXT("intro.ogg"), NULL, SND_FILENAME | SND_ASYNC);
+
 	MenuList menu;
 	OrderList order;
 	menuCreator(menu);
 	cout << "\t************************\t\n\t* Welcome to Book Cafe *\t\n\t************************\t" << endl;
+	system("color 80");//color BF (B- background, F - font)
+	/*
+	0 = Black       8 = Gray
+    1 = Blue        9 = Light Blue
+    2 = Green       A = Light Green
+    3 = Aqua        B = Light Aqua
+    4 = Red         C = Light Red
+    5 = Purple      D = Light Purple*/
 	pause();
 	intro(menu, order);	
 }
