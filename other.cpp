@@ -11,11 +11,10 @@ void showOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<doubl
 void currentOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice);
 void changeQuantity(vector<string>& menuItem, vector<double>& menuPrice, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice);
 void removeAllItem(vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice);
-void printReceipt(vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice,double& totalPrice);
+void printReceipt(vector<string>& menuItem,vector<int>& sessionQuantity, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice,double& totalPrice);
 void removeItem(vector<string>& menuItem, vector<double>& menuPrice, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice);
 int search(vector<string>w, string key);
-void dailySales(vector<string>& menuItem, vector<double>& menuPrice, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice, double& totalPrice, vector<string>& dailyItem, vector<int>& dailyQty, vector<double>& dailyPrice);
-
+void dailySales(vector<string>& menuItem, vector<double>& menuPrice,vector<int>& sessionQuantity);
 
 int main()
 {
@@ -91,13 +90,13 @@ int main()
 			removeItem(menuItem, menuPrice, customerOrderPrice, customerOrderQty, customerOrderItem, customerOrder_TotalPrice);
 			break;
 		case 5:
-			printReceipt(customerOrderPrice, customerOrderQty, customerOrderItem, customerOrder_TotalPrice,totalPrice);
+			printReceipt(menuItem, sessionQuantity, customerOrderPrice, customerOrderQty, customerOrderItem,customerOrder_TotalPrice, totalPrice);
 			break;
 		case 6:
 			removeAllItem(customerOrderPrice, customerOrderQty, customerOrderItem, customerOrder_TotalPrice);
 			break;
 		case 7:
-			dailySales(menuItem, menuPrice, customerOrderPrice, customerOrderQty, customerOrderItem, customerOrder_TotalPrice, totalPrice, dailyItem, dailyQty, dailyPrice);
+			dailySales(menuItem, menuPrice, sessionQuantity);
 			break;
 		case 8:
 			return (0);
@@ -377,6 +376,11 @@ void printReceipt(vector<string>& menuItem,vector<int>& sessionQuantity, vector<
 		cout << "\t\t\t|          Kalau Sedap Datang Lagi        |\n";
 		cout << "\t\t\t|                                         |\n";
 		cout << "\t\t	==========================================\n\n";
+		customerOrderQty.clear();
+		customerOrderItem.clear();
+		customerOrder_TotalPrice.clear();
+		customerOrderPrice.clear();
+		totalPrice = 0.0;
 		char pape;
 		cout << "Enter anything to continue : ";
 		cin >> pape;
@@ -404,21 +408,61 @@ void removeAllItem(vector<double>& customerOrderPrice, vector<int>& customerOrde
 	}
 }
 
-void dailySales(vector<string>& menuItem, vector<double>& menuPrice, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice, double& totalPrice, vector<string>& dailyItem, vector<int>& dailyQty, vector<double>& dailyPrice)
-{
-	if (customerOrderItem.empty()) {
-		cout << "You not order anything ." << endl;
-		cout << "Please select your order first :) " << endl;
+void dailySales(vector<string>& menuItem, vector<double>& menuPrice,vector<int>& sessionQuantity){	
+	if (menuItem.empty()) {
+		cout << "Menu error" << endl;
 		cout << endl;
 	}
 	else {
-		cout << setw(15) << "Item" << setw(10) << "Quantity" << setw(10) << fixed << setprecision(2) << "Price" << endl;
-		for (int i = 0; i < customerOrderItem.size(); i++) {
-			cout << i + 1 << ". " << setw(15) << customerOrderItem[i] << setw(10) << customerOrderQty[i] << setw(10) << fixed << setprecision(2) << customerOrderPrice[i] << endl;
+		ifstream infile("Report.txt", ofstream::in);
+		if (!infile) {
+			cout << "File does not exist";
+			exit(1);
 		}
+		ofstream outfile("Report.txt", ofstream::out);
+		if (!outfile) {
+			cout << "File could not be open\n";
+			exit(1);
+		}
+		cout << "\t\t	==========================================\n";
+		cout << "\t\t\t|             Rainbow's Restaurant        |\n";
+		cout << "\t\t\t|             No.Tel: 03-12345612         |\n";
+		cout << "\t\t\t|                                         |\n";
+		cout << "\t\t	==========================================\n\n";
+		cout << "------------------------------------------------------\n";
+		cout  <<setw(12)<<left<< "Quantity" << setw(25) << "Description" << setw(10) << "Price" << setw(10) << "Amount" << endl;
+		cout << "------------------------------------------------------\n";
+		for (int i = 0; i < sessionQuantity.size(); i++) {
+			cout << setw(12) << left<< sessionQuantity[i] << setw(25) << menuItem[i] << setw(10) << fixed << setprecision(2) << menuPrice[i] << setw(10) << fixed << setprecision(2) << menuPrice[i]*(sessionQuantity[i]/1.0) << endl;
+		}
+		cout << endl;
+		cout << "======================================================\n";
+		outfile << setw(5) << "Quantity" << setw(25) << "Description" << setw(10) << "Price" << setw(10) << fixed << setprecision(2) << "Amount" << endl;
+		for (int i = 0; i < sessionQuantity.size(); i++) {
+			outfile << setw(5) << sessionQuantity[i] << setw(25) << menuItem[i] << setw(10) << fixed << setprecision(2) << menuPrice[i] << setw(10) << fixed << setprecision(2) << menuPrice[i]*(sessionQuantity[i]/1.0) << endl;
+			
+		};
+		double sum = 0;
+		for (int i = 0; i < sessionQuantity.size(); i++) {
+			sum += menuPrice[i]*(sessionQuantity[i]/1.0);
+		}
+		outfile << "Total :" << sum << endl;
+		cout << "Total : "  << "RM " << sum << endl;
+		cout << endl;
+		cout << "Total : " << "RM " << sum << endl;
+		
+		cout << "\t\t	==========================================\n";
+		cout << "\t\t\t|          Terima Kasih Daun Keladi       |\n";
+		cout << "\t\t\t|          Kalau Sedap Datang Lagi        |\n";
+		cout << "\t\t\t|                                         |\n";
+		cout << "\t\t	==========================================\n\n";
+		char pape;
+		cout << "Enter anything to continue : ";
+		cin >> pape;
+		system ("CLS");
 	}
-
 }
+
 
 int search(vector<string>w, string key) {
 	for (size_t i = 0; i < w.size(); i++) {

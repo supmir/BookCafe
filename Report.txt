@@ -1,0 +1,20 @@
+Quantity              Description     Price    Amount
+    2             French_toast      3.50      7.00
+    4             Egg_Benedict      6.30     25.20
+    5                  Omelete      3.50     17.50
+    0               Hash_brown      5.00      0.00
+    0           Chicken_muffin      7.95      0.00
+    0                 Espresso      4.50      0.00
+    0                Americano      6.85      0.00
+    0                    Latte      6.00      0.00
+    0        Caramel_Macchiato      6.00      0.00
+    0                Cappucino      6.00      0.00
+    0                Sky_juice      0.25      0.00
+    0               Red_Velvet     10.90      0.00
+    0                 Brownies      9.90      0.00
+    0                   Muffin      4.95      0.00
+    0           NewYork_Cheese     10.95      0.00
+    0          Bluberry_Cheese     10.10      0.00
+    0              Oreo_Cheese      9.90      0.00
+    0               Cream_puff      2.10      0.00
+Total :49.70

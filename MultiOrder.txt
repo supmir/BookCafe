@@ -1,0 +1,13 @@
+Quantity              Description     Price    Amount
+    1             French_toast      3.50      3.50
+    2             Egg_Benedict      6.30     12.60
+Total :16.10
+
+
+Quantity              Description     Price    Amount
+    1             French_toast      3.50      3.50
+    2             Egg_Benedict      6.30     12.60
+    5                  Omelete      3.50     17.50
+Total :33.60
+
+
