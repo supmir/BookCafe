@@ -466,7 +466,7 @@ int main(){
 	MenuList menu;
 	OrderList order;
 	menuCreator(menu);
-	cout << "\t************************\t\n\t* Welcome to Book Cafe *\t\n\t************************\t" << endl;
+	cout << "\a\t************************\t\n\t* Welcome to Book Cafe *\t\n\t************************\t" << endl;
 	system("color 80");//color BF (B- background, F - font)
 	/*
 	0 = Black       8 = Gray
