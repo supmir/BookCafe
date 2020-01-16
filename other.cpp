@@ -21,6 +21,7 @@ int main()
 {
 	vector<string>menuItem;
 	vector<double>menuPrice;
+	vector<int>sessionQuantity;
 
 	vector<double>customerOrderPrice;
 	vector<int>customerOrderQty;
@@ -39,11 +40,12 @@ int main()
 		exit(1);
 	}
 	string food;
-	double price;
+	double price;	
 	while (!infile.eof()) {
 		infile >> food >> price;
 		menuItem.push_back(food);
 		menuPrice.push_back(price);
+		sessionQuantity.push_back(0);
 	}
 	infile.close();
 
@@ -109,14 +111,9 @@ int main()
 
 void showOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice, double& totalPrice, vector<string>& dailyItem, vector<int>& dailyQty, vector<double>& dailyPrice)
 {
-	cout << "    ___\n";
-	cout << "   /     \\   __   __    _ _\n";
-	cout << "  /  \\ /  \\_/ __ \\ /     \\ |  |  |\n";
-	cout << " /    Y    \\  _/|   |   \\|  |  |\n";
-	cout << " \\__|_/\\_>_|_|___|\n\n";
 	cout << setw(21) << "Menu" << setw(16) << "Price" << endl;
 
-	for (unsigned int i = 0; i < menuItem.size(); i++) {
+	for (int i = 0; i < menuItem.size(); i++) {
 		cout << i + 1 << setw(20) << menuItem[i] << fixed << setprecision(2) << setw(15) << menuPrice[i] << endl;
 	}
 	cout << endl;
@@ -137,7 +134,7 @@ void showOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<doubl
 
 	customerOrderItem.push_back(currentItem);
 
-	for (unsigned int i = 0; i < customerOrderItem.size(); i++) {
+	for (int i = 0; i < customerOrderItem.size(); i++) {
 		int positionItem = search(customerOrderItem, currentItem);
 		if (positionItem == -1) {
 			customerOrderQty[i] = customerOrderQty.at(choose - 1) + quantity;
@@ -175,7 +172,7 @@ void showOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<doubl
 			customerOrderPrice.push_back(currentItemPrice);
 			customerOrder_TotalPrice.push_back(currentItemtotalPrice);
 
-			for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+			for (int i = 0; i < customerOrderQty.size(); i++) {
 				int positionItem = search(customerOrderItem, itemNewOrder);
 				if (positionItem == 0) {
 					customerOrderQty[i] = quantity + newQuantity;
@@ -195,7 +192,7 @@ void showOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<doubl
 		}
 	}
 	cout << "Total price =" << totalPrice << endl;
-	for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+	for (int i = 0; i < customerOrderQty.size(); i++) {
 		cout << customerOrder_TotalPrice[i]<<endl;
 	}
 }
@@ -211,13 +208,13 @@ void currentOrder(vector<string>& menuItem, vector<double>& menuPrice, vector<do
 	else {
 		cout << setw(21) << "Menu" << setw(16) << "Quantity" << setw(16) << fixed << setprecision(2) << "Price (RM)" << setw(16) << fixed << setprecision(2) << "Total Price" << endl;
 
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			cout << setw(21) << customerOrderItem[i] << setw(16) << customerOrderQty[i] << setw(16) << fixed << setprecision(2) << customerOrderPrice[i] << setw(16) << customerOrder_TotalPrice[i] << endl;
 		}
 		cout << endl;
 		cout << endl;
 		double sum=0;
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			sum = sum + customerOrder_TotalPrice[i];
 		}
 		cout << "Total Amount : RM " << sum << endl;
@@ -233,7 +230,7 @@ void changeQuantity(vector<string>& menuItem, vector<double>& menuPrice, vector<
 	else {
 		cout << "This is what you ordered " << endl;
 
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			cout << i + 1 << setw(21) << customerOrderItem[i] << setw(16) << customerOrderQty[i] << setw(16) << fixed << setprecision(2) << customerOrderPrice[i] << endl;
 		}
 		cout << "Please choose what you want to change : ";
@@ -246,7 +243,7 @@ void changeQuantity(vector<string>& menuItem, vector<double>& menuPrice, vector<
 		int positionItem;
 		double abu = newQty * customerOrderPrice.at(chooseNew - 1);
 		if (newQty == 0) {
-			for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+			for (int i = 0; i < customerOrderQty.size(); i++) {
 				int positionItem = search(customerOrderItem, orderChangeQty);
 				if (positionItem != -1) {
 					//customerOrderQty.at(chooseNew - 1) = newQty;
@@ -258,7 +255,7 @@ void changeQuantity(vector<string>& menuItem, vector<double>& menuPrice, vector<
 			}
 		}
 		else {
-			for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+			for (int i = 0; i < customerOrderQty.size(); i++) {
 				positionItem = search(customerOrderItem, orderChangeQty);
 				if (positionItem != -1) {
 					customerOrderQty.at(chooseNew - 1) = newQty;
@@ -281,7 +278,7 @@ void removeItem(vector<string>& menuItem, vector<double>& menuPrice, vector<doub
 	}
 	else {
 		cout << "This is what you ordered " << endl;
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++)
+		for (int i = 0; i < customerOrderQty.size(); i++)
 		{
 			cout << i + 1 << " " << setw(21) << customerOrderItem[i] << setw(16) << customerOrderQty[i] << setw(16) << fixed << setprecision(2) << customerOrderPrice[i] << endl;
 		}
@@ -290,7 +287,7 @@ void removeItem(vector<string>& menuItem, vector<double>& menuPrice, vector<doub
 		cin >> chooseNew;
 		string customerToChange = customerOrderItem.at(chooseNew - 1);
 		cout << customerToChange << endl;
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			int positionItem = search(customerOrderItem, customerToChange);
 			if (positionItem != -1) {
 				//customerOrderQty.at(chooseNew - 1) = newQty;
@@ -305,7 +302,7 @@ void removeItem(vector<string>& menuItem, vector<double>& menuPrice, vector<doub
 	}
 }
 
-void printReceipt(vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice,double& totalPrice) {
+void printReceipt(vector<string>& menuItem,vector<int>& sessionQuantity, vector<double>& customerOrderPrice, vector<int>& customerOrderQty, vector<string>& customerOrderItem, vector<double>& customerOrder_TotalPrice,double& totalPrice) {
 	if (customerOrderItem.empty()) {
 		cout << "You not order anything ." << endl;
 		cout << "Please select your order first :) " << endl;
@@ -322,13 +319,8 @@ void printReceipt(vector<double>& customerOrderPrice, vector<int>& customerOrder
 			cout << "File could not be open\n";
 			exit(1);
 		}
-        ifstream infile1("MultiOrder.txt", ofstream::in);
-		if (!infile) {
-			cout << "File does not exit";
-			exit(1);
-		}
 		ofstream outfile2("MultiOrder.txt", ofstream::out|ofstream::app);
-		if (!outfile) {
+		if (!outfile2) {
 			cout << "File could not be open\n";
 			exit(1);
 		}
@@ -340,20 +332,31 @@ void printReceipt(vector<double>& customerOrderPrice, vector<int>& customerOrder
 		cout << "------------------------------------------------------\n";
 		cout  <<setw(12)<<left<< "Quantity" << setw(25) << "Description" << setw(10) << "Price" << setw(10) << "Amount" << endl;
 		cout << "------------------------------------------------------\n";
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			cout << setw(12) << left<< customerOrderQty[i] << setw(25) << customerOrderItem[i] << setw(10) << fixed << setprecision(2) << customerOrderPrice[i] << setw(10) << fixed << setprecision(2) << customerOrder_TotalPrice[i] << endl;
 		}
 		cout << endl;
 		cout << "======================================================\n";
 		outfile << setw(5) << "Quantity" << setw(25) << "Description" << setw(10) << "Price" << setw(10) << fixed << setprecision(2) << "Amount" << endl;
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		outfile2 << setw(5) << "Quantity" << setw(25) << "Description" << setw(10) << "Price" << setw(10) << fixed << setprecision(2) << "Amount" << endl;
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			outfile << setw(5) << customerOrderQty[i] << setw(25) << customerOrderItem[i] << setw(10) << fixed << setprecision(2) << customerOrderPrice[i] << setw(10) << fixed << setprecision(2) << customerOrder_TotalPrice[i] << endl;
+			outfile2 << setw(5) << customerOrderQty[i] << setw(25) << customerOrderItem[i] << setw(10) << fixed << setprecision(2) << customerOrderPrice[i] << setw(10) << fixed << setprecision(2) << customerOrder_TotalPrice[i] << endl;
+			for (size_t j = 0; j < menuItem.size(); j++)
+			{
+				if(menuItem[j]==customerOrderItem[i]){
+					sessionQuantity[j] +=customerOrderQty[i];
+					break;
+				}
+			}
+			
 		};
 		double sum = 0;
-		for (unsigned int i = 0; i < customerOrderQty.size(); i++) {
+		for (int i = 0; i < customerOrderQty.size(); i++) {
 			sum += customerOrder_TotalPrice[i];
 		}
 		outfile << "Total :" << sum << endl;
+		outfile2 << "Total :" << sum << endl<< endl<< endl;
 		cout << "Total : "  << "RM " << sum << endl;
 		cout << "Enter total amount you want to pay: ";
 		double pay;
@@ -410,7 +413,7 @@ void dailySales(vector<string>& menuItem, vector<double>& menuPrice, vector<doub
 	}
 	else {
 		cout << setw(15) << "Item" << setw(10) << "Quantity" << setw(10) << fixed << setprecision(2) << "Price" << endl;
-		for (unsigned int i = 0; i < customerOrderItem.size(); i++) {
+		for (int i = 0; i < customerOrderItem.size(); i++) {
 			cout << i + 1 << ". " << setw(15) << customerOrderItem[i] << setw(10) << customerOrderQty[i] << setw(10) << fixed << setprecision(2) << customerOrderPrice[i] << endl;
 		}
 	}
